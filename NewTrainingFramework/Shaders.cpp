@@ -16,6 +16,11 @@ int Shaders::Init(char * fileVertexShader, char * fileFragmentShader)
 		return -2;
 	}
 
+	if (colorAttribute != -1)
+	{
+		glBindAttribLocation(vertexShader, colorAttribute, "v_color");
+	}
+
 	program = esLoadProgram(vertexShader, fragmentShader);
 
 	//finding location of uniforms / attributes
