@@ -4,11 +4,9 @@
 class Shaders 
 {
 public:
-	GLuint program, vertexShader, fragmentShader;
-	GLint colorAttribute;
+	GLint program, vertexShader, fragmentShader, colorAttribute, positionAttribute, matrixUniform;
 	char fileVS[260];
 	char fileFS[260];
-	GLint positionAttribute;
 
 	int Init(char * fileVertexShader, char * fileFragmentShader);
 	~Shaders();

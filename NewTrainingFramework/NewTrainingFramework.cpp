@@ -1,4 +1,4 @@
-// NewTrainingFramework.cpp : Defines the entry point for the console application.
+﻿// NewTrainingFramework.cpp : Defines the entry point for the console application.
 //
 
 #include "stdafx.h"
@@ -8,14 +8,16 @@
 #include <conio.h>
 #include "Globals.h"
 #include <iostream>
-
+#define PI 3.14159265359
 
 GLuint vboId;
 Shaders myShaders;
+float angle = 0;
+float step = 0.01;
 
 int Init ( ESContext *esContext )
 {
-	glClearColor ( 0.5f, 0.5f, 0.5f, 0.0f );
+	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
 
 	//triangle data (heap)
 	Vertex verticesData[3];
@@ -54,7 +56,9 @@ void Draw ( ESContext *esContext )
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboId);
 
-	
+	Matrix mRotation;
+	mRotation.SetRotationZ(angle);
+	//rotate on z
 	if(myShaders.positionAttribute != -1)
 	{
 		glEnableVertexAttribArray(myShaders.positionAttribute);
@@ -64,8 +68,12 @@ void Draw ( ESContext *esContext )
 	if (myShaders.colorAttribute != -1)
 	{
 		glEnableVertexAttribArray(myShaders.colorAttribute);
-		glVertexAttribPointer(myShaders.colorAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)sizeof(Vector3));
-		std::cout << "Color attribute: " << myShaders.colorAttribute << std::endl;
+		glVertexAttribPointer(myShaders.colorAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)sizeof(Vector3));
+	}
+
+	if (myShaders.matrixUniform != -1)
+	{
+		glUniformMatrix4fv(myShaders.matrixUniform, 1, GL_FALSE, (GLfloat*)mRotation.m);
 	}
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -77,7 +85,12 @@ void Draw ( ESContext *esContext )
 
 void Update ( ESContext *esContext, float deltaTime )
 {
+	angle += step;
 	
+	if (angle >= 2 * PI)
+		angle -= 2 * PI;
+
+
 }
 
 void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
